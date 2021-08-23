@@ -56,7 +56,7 @@ export default function Sketch (p) {
         let b = Math.abs(c.y - circleTwo.y);
         let distance = Math.sqrt(a * a + b * b);
         if (distance < 105) {
-          p.stroke('rgba(255, 204,0,02)');
+          p.stroke('rgba(0, 204,0,02)');
           p.line(c.x, c.y, circleTwo.x, circleTwo.y);
         }
       });

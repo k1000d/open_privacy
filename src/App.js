@@ -4,9 +4,10 @@ import Ale from "./ale";
 import Busc from "./busc";
 import Bus from "./bus";
 import Regist from "./regist";
-import BarChart from "./BarChart";
+/* import BarChart from "./BarChart"; */
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import CardColumns from 'react-bootstrap/CardColumns'; 
+import Card from 'react-bootstrap/Card';
 import Sesion from "./sesion";
 import Inicio from "./inicio";
 import Figure from 'react-bootstrap/Figure';
@@ -34,30 +35,38 @@ function App() {
 const [mensaje, setMensaje]= useState ("")
  
 
-
+const [buscare, setBuscare]= useState([])
  
   
 
 
   //Para darle valor a lo que introduce el usuario y cambie.
 
-const registrar = (text, password, nombre) => {
+const registrar = (text, password, nombre, voto) => {
   fetch ("http://localhost:3000/api/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json'
     },
-      body: JSON.stringify({email:text,password: password, nombre: nombre})
+      body: JSON.stringify({email:text,password: password, nombre: nombre, voto:voto})
     }).then((res)=> res.json()).then((res)=>{console.log(res);setMensaje(res.mensaje)})
   
 }
 
-const buscar = (nombre,email) => {
-  fetch ("http://localhost:3000/clientes/" + nombre + email ).then ((res)=> res.json()).then((res)=>{
-    
+const buscar = (name) => {
+  fetch ("http://localhost:3000/clientes/"+ name).then ((res)=> res.json()).then((res)=>{
+    setBuscare(res)
     console.log(res)})
 }
+const mostrar = buscare.map((cliente) => {
+  return (   
+    <div>
+      <h1>{cliente.name}</h1>
+     
+    </div>
+ 
+)})
 
 const login = (text, password) => {
   fetch ("http://localhost:3000/api/login", {
@@ -82,22 +91,18 @@ function Main (){
            </div>
           
           <div id="contenedor2">
-           <p>¿Qué es open privacy?
-           Tus busquedas, descargas, likes, subscripciones, sirven para muchas empresas, 
-               una información que se registra y se utiliza con unos intereses que ni tu entiendes 
-               y que aprovaste por una accesibilidad. 
-               Open privacy defiende que tener acceso a el control de tus actividades y
-                la distribución comercial de tus datos es un derecho humano.
-                Open priacy te ofrece realizar un seguimiento de tus datos asi como la posibilidad de vender, comprar o ganar dinero con tus datos.  
+           <p>¿Qué es open privacy? Tus búsquedas, descargas, likes, subscripciones, sirven para muchas empresas, una información que se registra y se utiliza con unos intereses que ni tú entiendes y que aprobaste por una accesibilidad. Open privacy defiende que tener acceso al control de tus actividades y la distribución comercial de tus datos es un derecho humano. Open priacy te ofrece realizar un seguimiento de tus datos así como la posibilidad de vender, comprar o ganar dinero con tus datos.
                  </p>
                 </div>
               
                  
           <div id="contenedor3">
-            
+            <div id="titulo_usuarios">
+              <p>USUARIOS</p>
+            </div>
           <p> 
           <div>
-          <img src="/images/silvia.png" alt="" width="200"/>
+          <img src="/images/silvia.png" alt="" width="199"/>
           </div>
             Clara
               "Yo estoy contecta con open privacy me puedo pagar los estudios ya que al dia estoy unas 10 horas delante del ordenador XD.</p>
@@ -142,28 +147,6 @@ function Main (){
   )
 }
 
-function Footer () {
-  return (
-    <footer>
-      <div id="foot">
-      
-    
-   
-   <img src="/images/logo1.png" alt=""/>
-
-   
-
-      </div>
-      <div id="contenido_footer">
-
-        <p>Contacto</p>
-      </div>
-    </footer>
-  )
-}
-  
-
-
 function Nosotros (){
   return( 
     
@@ -178,16 +161,22 @@ function Nosotras (){
   return(
   
     <Figure>
-    <div id="workers">
-    <div>
-   <h1>EL EQUIPO</h1>
+      <div id="equipo">
+   <p>EL EQUIPO</p>
  </div>
+    <div id="workers">
+    
 <Figure.Image
   width={900}
   height={380}
-  alt="900x180"
+  alt="100x180"
   src="/images/workers.jpg"
 />
+ </div>
+
+ <div id="texto">
+   <p>Somos un líderes mundiales en control de datos. Tenemos la misión de desarrollar y proporcionar tecnología de IA con el fin de crear una sociedad donde todas las personas puedan entenderse y ayudarse mutuamente, pensamos que que el control de datos es un derecho que debe ser transaparente y individual. Siempre estamos buscando talentos excepcionales que quieran desarrollar soluciones basadas en la empatía para problemas desafiantes en múltiples sectores empresariales como
+robótica, interfaz de voz, automóviles y atención médica.</p>
  </div>
 </Figure>
     
@@ -195,6 +184,38 @@ function Nosotras (){
     
   )
 }
+
+
+function Footer () {
+  return (
+    <footer>
+      <div id="foot">
+      
+    
+   
+   <img src="/images/logo1.png" alt=""/>
+
+   
+
+      </div>
+      <div id="contenido_footer">
+
+        <ul>
+          <li>Contacto</li>
+          <li>Politica de Privacidad</li>
+          <li>Politica de uso</li>
+          
+        </ul>
+        <div id="derechos">
+          <p>© Open Privacy Todos los derechos reservados</p>
+        </div>
+      </div>
+    </footer>
+  )
+}
+  
+
+
 
 
 
@@ -225,23 +246,39 @@ function Nosotras (){
   <Busc/>
   <Nosotros/>
   </div>
+
   <Route exact path ="/nosotros">
-  
   <Nosotras/>
-  
   </Route>
+
   <Route exact path ="/buscarte">
+
     
+    
+    <CardColumns>
+    <Card>
+      <Card.Img variant="top" src="" />
+      <Card.Body>
+        <Card.Title>{mostrar}</Card.Title>
+        <Card.Text>
+        
+        </Card.Text>
+      </Card.Body>
+      <Card.Footer>
+      
+      </Card.Footer>
+    </Card>
+    
+      </CardColumns>
+      
  
-  
   <Bus buscar={buscar}/>
- 
-  </Route>
-  <Route exact path = "/iniciosesion">
-  <BarChart/>
-  <Inicio login={login}/>
- 
   
+  </Route>
+
+  <Route exact path = "/iniciosesion">
+  <Inicio login={login}/>
+{/*   <BarChart/> */}
   </Route>
  
   <Route exact path = "/registro">
@@ -254,8 +291,9 @@ function Nosotras (){
 
 <Route exact path ="/">
   <Main />
+ 
 </Route>
-  <Footer />
+<Footer/>
   </BrowserRouter>
   
   )
